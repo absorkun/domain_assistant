@@ -2,7 +2,7 @@
 
 <div class="d-flex align-items-center gap-2">
     <img
-        src="{{ Vite::asset('resources/assets/logo.png') }}"
+        src="{{ asset('logo.png') }}"
         alt="{{ config('app.name') }}"
         class="flex-shrink-0"
         style="width: 2.75rem; height: 2.75rem; object-fit: contain;"
