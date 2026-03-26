@@ -1,6 +1,6 @@
 @props(['title' => '', 'subtitle' => ''])
 
-<div class="d-flex align-items-center py-5 bg-body-tertiary">
+<div class="min-vh-100 d-flex align-items-center py-4 py-lg-5 bg-body-tertiary">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 col-md-10 col-lg-7">

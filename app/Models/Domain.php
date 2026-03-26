@@ -23,7 +23,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 ])]
 class Domain extends Model
 {
-    public function casts(): array
+    protected function casts(): array
     {
         return [
             'tgl_reg' => 'date',
@@ -32,7 +32,7 @@ class Domain extends Model
             'dnssec' => 'boolean',
         ];
     }
-    
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

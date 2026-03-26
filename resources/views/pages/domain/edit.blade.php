@@ -118,6 +118,9 @@ new class extends Component {
                             @error('dnssec')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
                         </div>
                     </div>
+                    <div class="col-12 d-flex justify-content-end">
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
                 </div>
             </div>
         </form>

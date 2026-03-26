@@ -17,7 +17,7 @@ new class extends Component {
                     </div>
                 </div>
 
-                <div class="d-grid d-sm-flex">
+                <div class="d-grid d-sm-flex justify-content-sm-start">
                     <a href="{{ route('tools.backup.download') }}" class="btn btn-primary w-100 w-sm-auto">
                         Download ZIP
                     </a>

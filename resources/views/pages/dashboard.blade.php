@@ -39,10 +39,10 @@ new class extends Component {
 ?>
 
 <x-ui.admin-shell title="Dashboard" subtitle="Overview">
-    <div class="card border-0 shadow-sm mb-3">
+    <div class="card border-0 shadow-sm mb-4">
         <div class="card-body d-flex align-items-center gap-3">
             <x-ui.user-avatar :user="$this->user()" size="3rem" />
-            <div class="lh-sm">
+            <div class="lh-sm min-w-0">
                 <div class="fw-semibold text-dark">{{ $this->user()?->full_name }}</div>
                 <small class="text-secondary">{{ $this->user()?->name }}</small>
             </div>

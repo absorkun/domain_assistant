@@ -107,19 +107,19 @@ new class extends Component {
     <div class="card border-0 shadow-sm w-100">
         <div class="card-body p-4 p-md-5">
             <div class="row g-3 align-items-end mb-4">
-                <div class="col-sm-4">
+                <div class="col-12 col-md-3">
                     <label class="form-label">Jumlah data</label>
                     <input type="number" min="1" max="100" wire:model.live="limit" class="form-control">
                 </div>
-                <div class="col-sm-4">
+                <div class="col-12 col-md-3">
                     <label class="form-label">Dari tanggal</label>
                     <input type="date" wire:model.live="from" class="form-control">
                 </div>
-                <div class="col-sm-4">
+                <div class="col-12 col-md-3">
                     <label class="form-label">Sampai tanggal</label>
                     <input type="date" wire:model.live="to" class="form-control">
                 </div>
-                <div class="col-sm-4">
+                <div class="col-12 col-md-3">
                     <label class="form-label">Status kirim</label>
                     <select wire:model.live="statusFilter" class="form-select">
                         <option value="all">Semua</option>
@@ -136,10 +136,10 @@ new class extends Component {
 
             <div class="d-grid gap-2">
                 @forelse ($this->domains as $domain)
-                    <div class="border rounded-3 p-3">
-                        <div class="d-flex justify-content-between align-items-start gap-3">
-                            <div>
-                                <div class="fw-semibold text-dark">{{ $domain->domain }}</div>
+                    <div class="border rounded-3 p-3 p-md-4">
+                        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start gap-3">
+                            <div class="min-w-0">
+                                <div class="fw-semibold text-dark text-break">{{ $domain->domain }}</div>
                                 <div class="text-secondary small">
                                     Expired {{ $domain->tgl_exp?->format('d/m/Y') ?? '-' }} · {{ data_get($domain, 'user.email', '-') }}
                                 </div>
@@ -148,7 +148,7 @@ new class extends Component {
                                 type="button"
                                 wire:click="sendEmail({{ $domain->id }})"
                                 @disabled(! $this->canSend($domain->id))
-                                class="btn btn-outline-primary btn-sm"
+                                class="btn btn-outline-primary btn-sm flex-shrink-0"
                             >
                                 {{ $this->canSend($domain->id) ? 'Kirim' : 'Terkirim' }}
                             </button>
