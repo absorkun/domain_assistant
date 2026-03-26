@@ -21,43 +21,28 @@
 
                     <div class="small text-uppercase text-secondary fw-semibold mb-2">Menu</div>
                     <div class="nav nav-pills flex-column gap-1">
-                        <a
-                            href="/dashboard"
-                            wire:navigate
-                            class="nav-link {{ request()->is('dashboard') ? 'active' : 'text-secondary-emphasis' }}"
-                        >
+                        <a href="/dashboard" wire:navigate
+                            class="nav-link {{ request()->is('dashboard') ? 'active' : 'text-secondary-emphasis' }}">
                             Dashboard
                         </a>
 
                         <div class="mt-2">
                             <div class="small text-uppercase text-secondary fw-semibold mb-2">Domain</div>
                             <div class="nav nav-pills flex-column gap-1 ps-2">
-                                <a
-                                    href="/domain/add"
-                                    wire:navigate
-                                    class="nav-link {{ request()->is('domain/add') ? 'active' : 'text-secondary-emphasis' }}"
-                                >
-                                    Add
-                                </a>
-                                <a
-                                    href="/domain"
-                                    wire:navigate
-                                    class="nav-link {{ request()->is('domain') ? 'active' : 'text-secondary-emphasis' }}"
-                                >
+                                <a href="/domain" wire:navigate
+                                    class="nav-link {{ request()->is('domain') ? 'active' : 'text-secondary-emphasis' }}">
                                     Search
                                 </a>
-                                <a
-                                    href="/domain/expired"
-                                    wire:navigate
-                                    class="nav-link {{ request()->is('domain/expired') ? 'active' : 'text-secondary-emphasis' }}"
-                                >
+                                <a href="/domain/add" wire:navigate
+                                    class="nav-link {{ request()->is('domain/add') ? 'active' : 'text-secondary-emphasis' }}">
+                                    Add
+                                </a>
+                                <a href="/domain/expired" wire:navigate
+                                    class="nav-link {{ request()->is('domain/expired') ? 'active' : 'text-secondary-emphasis' }}">
                                     Expired
                                 </a>
-                                <a
-                                    href="/domain/email"
-                                    wire:navigate
-                                    class="nav-link {{ request()->is('domain/email') ? 'active' : 'text-secondary-emphasis' }}"
-                                >
+                                <a href="/domain/email" wire:navigate
+                                    class="nav-link {{ request()->is('domain/email') ? 'active' : 'text-secondary-emphasis' }}">
                                     Email
                                 </a>
                             </div>
@@ -66,11 +51,8 @@
                         <div class="mt-2">
                             <div class="small text-uppercase text-secondary fw-semibold mb-2">Tools</div>
                             <div class="nav nav-pills flex-column gap-1 ps-2">
-                                <a
-                                    href="{{ route('tools.backup') }}"
-                                    wire:navigate
-                                    class="nav-link {{ request()->is('tools/backup') ? 'active' : 'text-secondary-emphasis' }}"
-                                >
+                                <a href="{{ route('tools.backup') }}" wire:navigate
+                                    class="nav-link {{ request()->is('tools/backup') ? 'active' : 'text-secondary-emphasis' }}">
                                     Backup
                                 </a>
                             </div>
@@ -92,13 +74,8 @@
                 <div class="border-bottom bg-white d-lg-none px-3 py-3">
                     <div class="d-flex align-items-center justify-content-between gap-3">
                         <x-ui.brand :subtitle="$subtitle" />
-                        <button
-                            class="btn btn-outline-secondary"
-                            type="button"
-                            data-bs-toggle="offcanvas"
-                            data-bs-target="#mobileSidebar"
-                            aria-controls="mobileSidebar"
-                        >
+                        <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas"
+                            data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
                             <i class="bi bi-list"></i>
                         </button>
                     </div>
@@ -135,22 +112,28 @@
             <div>
                 <div class="small text-uppercase text-secondary fw-semibold mb-2">Menu</div>
                 <div class="nav nav-pills flex-column gap-1">
-                    <a href="/dashboard" wire:navigate class="nav-link {{ request()->is('dashboard') ? 'active' : 'text-secondary-emphasis' }}">Dashboard</a>
+                    <a href="/dashboard" wire:navigate
+                        class="nav-link {{ request()->is('dashboard') ? 'active' : 'text-secondary-emphasis' }}">Dashboard</a>
                 </div>
             </div>
             <div>
                 <div class="small text-uppercase text-secondary fw-semibold mb-2">Domain</div>
                 <div class="nav nav-pills flex-column gap-1 ps-2">
-                    <a href="/domain/add" wire:navigate class="nav-link {{ request()->is('domain/add') ? 'active' : 'text-secondary-emphasis' }}">Add</a>
-                    <a href="/domain" wire:navigate class="nav-link {{ request()->is('domain') ? 'active' : 'text-secondary-emphasis' }}">Search</a>
-                    <a href="/domain/expired" wire:navigate class="nav-link {{ request()->is('domain/expired') ? 'active' : 'text-secondary-emphasis' }}">Expired</a>
-                    <a href="/domain/email" wire:navigate class="nav-link {{ request()->is('domain/email') ? 'active' : 'text-secondary-emphasis' }}">Email</a>
+                    <a href="/domain/add" wire:navigate
+                        class="nav-link {{ request()->is('domain/add') ? 'active' : 'text-secondary-emphasis' }}">Add</a>
+                    <a href="/domain" wire:navigate
+                        class="nav-link {{ request()->is('domain') ? 'active' : 'text-secondary-emphasis' }}">Search</a>
+                    <a href="/domain/expired" wire:navigate
+                        class="nav-link {{ request()->is('domain/expired') ? 'active' : 'text-secondary-emphasis' }}">Expired</a>
+                    <a href="/domain/email" wire:navigate
+                        class="nav-link {{ request()->is('domain/email') ? 'active' : 'text-secondary-emphasis' }}">Email</a>
                 </div>
             </div>
             <div>
                 <div class="small text-uppercase text-secondary fw-semibold mb-2">Tools</div>
                 <div class="nav nav-pills flex-column gap-1 ps-2">
-                    <a href="{{ route('tools.backup') }}" wire:navigate class="nav-link {{ request()->is('tools/backup') ? 'active' : 'text-secondary-emphasis' }}">Backup</a>
+                    <a href="{{ route('tools.backup') }}" wire:navigate
+                        class="nav-link {{ request()->is('tools/backup') ? 'active' : 'text-secondary-emphasis' }}">Backup</a>
                 </div>
             </div>
             <div class="mt-auto pt-3 border-top">

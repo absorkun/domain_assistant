@@ -7,9 +7,7 @@
         <title>{{ $title ?? config('app.name') }}</title>
         <meta name="description" content="Landing page dan dashboard domain assistant">
 
-        @if (file_exists(public_path('build/manifest.json')))
-            @vite('resources/js/app.js')
-        @endif
+        @vite('resources/js/app.js')
 
         @livewireStyles
     </head>
