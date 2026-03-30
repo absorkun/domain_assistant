@@ -23,4 +23,23 @@ class ActivityLogger
             'occurred_at' => now(),
         ]);
     }
+
+    /**
+     * @param  array<string, mixed>  $changes
+     */
+    public function logChanges(string $action, Model $subject, string $description, array $changes): void
+    {
+        $properties = [];
+
+        foreach ($changes as $key => $value) {
+            $properties[$key] = [
+                'old' => $subject->getOriginal($key),
+                'new' => $value,
+            ];
+        }
+
+        $this->log($action, $subject, $description, [
+            'changes' => $properties,
+        ]);
+    }
 }

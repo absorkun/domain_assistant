@@ -29,6 +29,7 @@ new class extends Component {
                             <th>User</th>
                             <th>Aksi</th>
                             <th>Deskripsi</th>
+                            <th>Perubahan</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -40,10 +41,29 @@ new class extends Component {
                                 </td>
                                 <td class="text-nowrap">{{ $activity->action }}</td>
                                 <td>{{ $activity->description ?? '-' }}</td>
+                                <td class="small">
+                                    @php($changes = data_get($activity->properties, 'changes', []))
+                                    @if ($changes)
+                                        <div class="d-flex flex-column gap-1">
+                                            @foreach ($changes as $field => $change)
+                                                <div>
+                                                    <div class="fw-semibold text-dark">{{ $field }}</div>
+                                                    <div class="text-secondary">
+                                                        <span class="text-danger">{{ $change['old'] ?? '-' }}</span>
+                                                        <span class="mx-1">→</span>
+                                                        <span class="text-success">{{ $change['new'] ?? '-' }}</span>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        -
+                                    @endif
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="text-center text-secondary py-4">Belum ada log aktivitas.</td>
+                                <td colspan="5" class="text-center text-secondary py-4">Belum ada log aktivitas.</td>
                             </tr>
                         @endforelse
                     </tbody>

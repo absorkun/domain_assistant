@@ -13,10 +13,19 @@ class DomainObserver
 
     public function updated(Domain $domain): void
     {
-        $this->activityLogger->log(
+        $changes = $domain->getChanges();
+
+        unset($changes['updated_at']);
+
+        if ($changes === []) {
+            return;
+        }
+
+        $this->activityLogger->logChanges(
             action: 'domain.updated',
             subject: $domain,
-            description: 'Domain diperbarui.'
+            description: 'Domain diperbarui.',
+            changes: $changes
         );
     }
 
