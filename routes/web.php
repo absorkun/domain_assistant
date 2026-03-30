@@ -17,8 +17,13 @@ Route::middleware(['auth'])->group(function () {
     Route::livewire('/domain/expired', 'pages::domain.expired')->name('domain.expired');
     Route::livewire('/domain/email', 'pages::domain.email')->name('domain.email');
     Route::livewire('/domain/{id}', 'pages::domain.edit')->name('domain.edit');
-    Route::livewire('/tools/backup', 'pages::tools.backup')->name('tools.backup');
 
-    Route::get('/tools/backup/download', BackupDownloadController::class)->name('tools.backup.download');
+    Route::livewire('/tools/backup', 'pages::tools.backup')
+        ->middleware(['role:super_admin'])
+        ->name('tools.backup');
+    Route::get('/tools/backup/download', BackupDownloadController::class)
+        ->middleware(['role:super_admin'])
+        ->name('tools.backup.download');
+        
     Route::post('/logout', LogoutController::class)->name('logout');
 });
