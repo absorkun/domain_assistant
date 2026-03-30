@@ -8,7 +8,7 @@ use Illuminate\Console\Command;
 use App\Models\ImportedEmail;
 use Carbon\Carbon;
 
-#[Signature('imap:import-emails {--host=} {--port=993} {--encryption=ssl} {--mailbox=INBOX} {--username=} {--password=} {--limit=0}')]
+#[Signature('email:import {--host=} {--port=993} {--encryption=ssl} {--mailbox=INBOX} {--username=} {--password=} {--limit=0}')]
 #[Description('Import emails from IMAP into the database')]
 class ImportImapEmailsCommand extends Command
 {

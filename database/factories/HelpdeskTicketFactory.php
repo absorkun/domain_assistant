@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\HelpdeskStatus;
 use App\Models\HelpdeskTicket;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -20,8 +21,9 @@ class HelpdeskTicketFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
+            'domain' => fake()->domainName(),
             'subject' => fake()->sentence(4),
-            'status' => 'open',
+            'status' => HelpdeskStatus::Open,
             'last_message_at' => now(),
         ];
     }
