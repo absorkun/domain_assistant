@@ -6,5 +6,8 @@ enum DomainEmailStatus: string
 {
     case Sent = 'sent';
     case Pending = 'pending';
-    case Failed = 'failed';
+    case Error = 'error';
+    case Retry1 = 'retry1';
+    case Retry2 = 'retry2';
+    case Retry3 = 'retry3';
 }

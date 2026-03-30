@@ -13,6 +13,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'user_id',
     'status',
     'sent_at',
+    'retry1',
+    'retry2',
+    'retry3',
 ])]
 class DomainEmail extends Model
 {
@@ -20,6 +23,9 @@ class DomainEmail extends Model
     {
         return [
             'sent_at' => 'datetime',
+            'retry1' => 'boolean',
+            'retry2' => 'boolean',
+            'retry3' => 'boolean',
         ];
     }
 

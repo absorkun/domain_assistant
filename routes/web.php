@@ -17,6 +17,7 @@ Route::middleware(['auth'])->group(function () {
     Route::livewire('/domain/expired', 'pages::domain.expired')->name('domain.expired');
     Route::livewire('/domain/email', 'pages::domain.email')->name('domain.email');
     Route::livewire('/domain/{id}', 'pages::domain.edit')->name('domain.edit');
+    Route::livewire('/helpdesk/chat', 'pages::helpdesk.chat')->name('helpdesk.chat');
     Route::livewire('/logs/activity', 'pages::logs.activity')->name('logs.activity');
 
     Route::livewire('/tools/backup', 'pages::tools.backup')
