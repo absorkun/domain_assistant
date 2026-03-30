@@ -116,9 +116,12 @@ new class extends Component {
                         @foreach ($this->latestDomains as $record)
                             <tr class="{{ $highlightedId === $record->id ? 'table-primary' : '' }}">
                                 <td class="fw-semibold text-dark">
-                                    <a href="https://{{ $record->domain }}" target="_blank" rel="noopener" class="text-decoration-none text-dark text-truncate d-inline-block w-100">
-                                        {{ $record->domain }}
-                                    </a>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="text-truncate">{{ $record->domain }}</span>
+                                        <a href="https://{{ $record->domain }}" target="_blank" rel="noopener" class="text-decoration-none text-primary flex-shrink-0" aria-label="Buka domain {{ $record->domain }}">
+                                            <i class="bi bi-box-arrow-up-right"></i>
+                                        </a>
+                                    </div>
                                 </td>
                                 <td>{{ $record->status ?? '-' }}</td>
                                 <td>

@@ -25,11 +25,13 @@ class DomainEmailExportController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'domain_id' => ['required', 'integer', Rule::exists('domains', 'id')],
+            'domain' => ['required', 'string', Rule::exists('domains', 'domain')],
             'status' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $domain = Domain::query()->findOrFail($validated['domain_id']);
+        $domain = Domain::query()
+            ->where('domain', $validated['domain'])
+            ->firstOrFail();
 
         $domainEmail = DomainEmail::query()->create([
             'domain_id' => $domain->id,

@@ -72,7 +72,9 @@ new class extends Component {
                         <dt class="col-4 col-md-3 text-secondary fw-normal">DNSSEC</dt>
                         <dd class="col-8 col-md-9 mb-0">{{ $this->domain->dnssec ? 'Aktif' : 'Non-aktif' }}</dd>
                         <dt class="col-4 col-md-3 text-secondary fw-normal">Website</dt>
-                        <dd class="col-8 col-md-9 mb-0 text-break">{{ $this->domain->website ?? '-' }}</dd>
+                        <dd class="col-8 col-md-9 mb-0">
+                            {{ filled($this->domain->website) ? 'Tersedia' : 'Tidak tersedia' }}
+                        </dd>
                         <dt class="col-4 col-md-3 text-secondary fw-normal">IP Addr.</dt>
                         <dd class="col-8 col-md-9 mb-0">{{ $this->domain->dns_a ?? '-' }}</dd>
                         <dt class="col-4 col-md-3 text-secondary fw-normal">Tgl. Registrasi</dt>
