@@ -58,6 +58,16 @@
                                 </a>
                             </div>
                         </div>
+
+                        <div class="mt-2">
+                            <div class="small text-uppercase text-secondary fw-semibold mb-2">Logs</div>
+                            <div class="nav nav-pills flex-column gap-1 ps-2">
+                                <a href="{{ route('logs.activity') }}" wire:navigate
+                                    class="nav-link py-2 px-3 rounded-3 {{ request()->routeIs('logs.activity') ? 'active' : 'text-secondary-emphasis' }}">
+                                    Aktivitas
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -137,6 +147,13 @@
                 <div class="nav nav-pills flex-column gap-1 ps-2">
                     <a href="{{ route('tools.backup') }}" wire:navigate
                         class="nav-link py-2 px-3 rounded-3 {{ request()->routeIs('tools.backup') ? 'active' : 'text-secondary-emphasis' }}">Backup</a>
+                </div>
+            </div>
+            <div>
+                <div class="small text-uppercase text-secondary fw-semibold mb-2">Logs</div>
+                <div class="nav nav-pills flex-column gap-1 ps-2">
+                    <a href="{{ route('logs.activity') }}" wire:navigate
+                        class="nav-link py-2 px-3 rounded-3 {{ request()->routeIs('logs.activity') ? 'active' : 'text-secondary-emphasis' }}">Aktivitas</a>
                 </div>
             </div>
             <div class="mt-auto pt-3 border-top">
