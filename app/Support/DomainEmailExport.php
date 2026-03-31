@@ -3,19 +3,21 @@
 namespace App\Support;
 
 use App\Models\DomainEmail;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Carbon;
 
 class DomainEmailExport
 {
-    public function todaySent(): array
+    public function all(int $limit = 0): array
     {
-        return DomainEmail::query()
+        $query = DomainEmail::query()
             ->with(['user:id,email', 'domainRecord:id,domain'])
-            ->whereDate('sent_at', Carbon::today())
-            ->where('status', 'sent')
             ->orderByDesc('sent_at')
-            ->limit(10)
+            ->orderByDesc('id');
+
+        if ($limit > 0) {
+            $query->limit($limit);
+        }
+
+        return $query
             ->get()
             ->map(function ($email): array {
                 return [
@@ -26,10 +28,5 @@ class DomainEmailExport
                 ];
             })
             ->all();
-    }
-
-    public function all(): Collection
-    {
-        return DomainEmail::all();
     }
 }

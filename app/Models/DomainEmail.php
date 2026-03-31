@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'domain_id',
     'user_id',
     'status',
+    'keterangan',
     'sent_at',
     'retry1',
     'retry2',

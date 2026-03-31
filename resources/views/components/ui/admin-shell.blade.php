@@ -50,6 +50,16 @@
                         </div>
 
                         <div class="mt-2">
+                            <div class="small text-uppercase text-secondary fw-semibold mb-2">User</div>
+                            <div class="nav nav-pills flex-column gap-1 ps-2">
+                                <a href="{{ route('user.contact') }}" wire:navigate
+                                    class="nav-link py-2 px-3 rounded-3 {{ request()->routeIs('user.contact') ? 'active' : 'text-secondary-emphasis' }}">
+                                    Kontak
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="mt-2">
                             <div class="small text-uppercase text-secondary fw-semibold mb-2">Tools</div>
                             <div class="nav nav-pills flex-column gap-1 ps-2">
                                 <a href="{{ route('tools.backup') }}" wire:navigate
@@ -150,6 +160,13 @@
                         class="nav-link py-2 px-3 rounded-3 {{ request()->routeIs('domain.expired') ? 'active' : 'text-secondary-emphasis' }}">Expired</a>
                     <a href="{{ route('domain.email') }}" wire:navigate
                         class="nav-link py-2 px-3 rounded-3 {{ request()->routeIs('domain.email') ? 'active' : 'text-secondary-emphasis' }}">Email</a>
+                </div>
+            </div>
+            <div>
+                <div class="small text-uppercase text-secondary fw-semibold mb-2">User</div>
+                <div class="nav nav-pills flex-column gap-1 ps-2">
+                    <a href="{{ route('user.contact') }}" wire:navigate
+                        class="nav-link py-2 px-3 rounded-3 {{ request()->routeIs('user.contact') ? 'active' : 'text-secondary-emphasis' }}">Kontak</a>
                 </div>
             </div>
             <div>
