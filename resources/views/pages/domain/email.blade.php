@@ -60,11 +60,6 @@ new class extends Component {
                     <label class="form-label">Sampai tanggal</label>
                     <input type="date" wire:model.live="to" class="form-control">
                 </div>
-                <div class="col-12 col-md-3"></div>
-            </div>
-
-            <div class="d-flex flex-column flex-sm-row justify-content-end align-items-start align-items-sm-center gap-3 mb-4">
-                <a href="{{ url('/api/domain/email/export') }}" target="_blank" class="btn btn-outline-primary btn-sm">Lihat API</a>
             </div>
 
             <div class="d-grid gap-2">

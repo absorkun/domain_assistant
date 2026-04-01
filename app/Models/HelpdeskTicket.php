@@ -15,6 +15,12 @@ class HelpdeskTicket extends Model
     protected $fillable = [
         'user_id',
         'domain',
+        'reporter_name',
+        'reporter_email',
+        'reporter_phone',
+        'received_by_user_id',
+        'received_by_name',
+        'report_body',
         'subject',
         'status',
         'last_message_at',

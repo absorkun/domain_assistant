@@ -1,7 +1,6 @@
 <?php
 
 use App\Enums\HelpdeskStatus;
-use App\Models\HelpdeskMessage;
 use App\Models\HelpdeskTicket;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
@@ -10,14 +9,6 @@ use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 new class extends Component {
-    public string $domain = '';
-
-    public string $subject = '';
-
-    public string $body = '';
-
-    public string $status = HelpdeskStatus::Open->value;
-
     #[Computed]
     public function tickets(): Collection
     {
@@ -28,107 +19,98 @@ new class extends Component {
             ->get();
     }
 
-    public function statuses(): array
+    public function updateStatus(int $ticketId, string $status): void
     {
-        return HelpdeskStatus::cases();
-    }
-
-    public function createTicket(): void
-    {
-        $data = Validator::make([
-            'domain' => $this->domain,
-            'subject' => $this->subject,
-            'status' => $this->status,
-            'body' => $this->body,
+        Validator::make([
+            'status' => $status,
         ], [
-            'domain' => ['nullable', 'string', 'max:120'],
-            'subject' => ['required', 'string', 'max:120'],
             'status' => ['required', Rule::enum(HelpdeskStatus::class)],
-            'body' => ['required', 'string', 'min:3'],
         ])->validate();
 
-        $ticket = HelpdeskTicket::query()->create([
-            'user_id' => auth()->id(),
-            'domain' => $data['domain'] ?: null,
-            'subject' => $data['subject'],
-            'status' => $data['status'],
-            'last_message_at' => now(),
+        $ticket = HelpdeskTicket::query()
+            ->where('user_id', auth()->id())
+            ->findOrFail($ticketId);
+
+        $ticket->update([
+            'status' => $status,
         ]);
-
-        HelpdeskMessage::query()->create([
-            'helpdesk_ticket_id' => $ticket->id,
-            'user_id' => auth()->id(),
-            'sender_id' => auth()->id(),
-            'receiver_id' => null,
-            'body' => $data['body'],
-            'is_staff' => false,
-            'sent_at' => now(),
-        ]);
-
-        $this->reset(['domain', 'subject', 'body', 'status']);
-        $this->status = HelpdeskStatus::Open->value;
-
-        $this->dispatch('ticket-created');
     }
 };
 ?>
 
 <x-ui.admin-shell title="Chat" subtitle="Helpdesk">
-    <div class="card border-0 shadow-sm w-100">
-        <div class="card-body p-4 p-md-5">
-            <div class="d-flex flex-column gap-4">
-                <div>
-                    <div class="fw-semibold mb-1">Catat Laporan</div>
-                    <div class="text-secondary small mb-3">Input laporan manual dari WA lalu simpan ke tiket.</div>
-                    <form wire:submit="createTicket" class="d-flex flex-column gap-3">
-                        <div>
-                            <label class="form-label">Domain</label>
-                            <input wire:model="domain" type="text" class="form-control">
-                            @error('domain') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
-                        </div>
-                        <div>
-                            <label class="form-label">Judul</label>
-                            <input wire:model="subject" type="text" class="form-control">
-                            @error('subject') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
-                        </div>
-                        <div>
-                            <label class="form-label">Status</label>
-                            <select wire:model="status" class="form-select">
-                                @foreach ($this->statuses() as $ticketStatus)
-                                    <option value="{{ $ticketStatus->value }}">{{ $ticketStatus->label() }}</option>
-                                @endforeach
-                            </select>
-                            @error('status') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
-                        </div>
-                        <div>
-                            <label class="form-label">Pesan</label>
-                            <textarea wire:model="body" rows="4" class="form-control"></textarea>
-                            @error('body') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
-                        </div>
-                        <button type="submit" class="btn btn-primary align-self-start">Simpan</button>
-                    </form>
+    <div class="d-flex flex-column gap-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4 p-md-5">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3">
+                    <div>
+                        <div class="text-secondary small text-uppercase fw-semibold mb-1">Helpdesk</div>
+                        <h2 class="h4 mb-0">Catat Laporan</h2>
+                        <div class="text-secondary small mt-2">Laporan manual dari WA user ke staff.</div>
+                    </div>
+                    <a href="{{ route('helpdesk.chat.create') }}" wire:navigate class="btn btn-primary">Tambah</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4 p-md-5">
+                <div class="d-flex align-items-center justify-content-between gap-3 mb-3">
+                    <div>
+                        <div class="text-secondary small text-uppercase fw-semibold mb-1">Tiket</div>
+                        <h3 class="h5 mb-0">Daftar Laporan</h3>
+                    </div>
                 </div>
 
-                <div>
-                    <div class="fw-semibold mb-3">Tiket Masuk</div>
-                    <div class="d-flex flex-column gap-2">
-                        @forelse ($this->tickets as $ticket)
-                            <a href="{{ route('helpdesk.chat.detail', $ticket->id) }}" wire:navigate class="text-decoration-none">
-                                <div class="border rounded-3 p-3 bg-white">
-                                    <div class="d-flex justify-content-between align-items-center gap-3">
-                                        <div class="fw-semibold text-truncate text-dark">{{ $ticket->subject }}</div>
-                                        @php($ticketStatus = $ticket->status instanceof HelpdeskStatus ? $ticket->status : HelpdeskStatus::tryFrom((string) $ticket->status))
-                                        <span class="badge {{ $ticketStatus?->badgeClass() ?? 'text-bg-light' }}">{{ $ticketStatus?->label() ?? $ticket->status }}</span>
-                                    </div>
-                                    <div class="text-secondary small mt-1">
-                                        {{ $ticket->domain ?: '-' }} · Dibuat {{ $ticket->created_at?->format('d/m/Y') }}
-                                    </div>
-                                </div>
-                            </a>
-                        @empty
-                            <div class="text-secondary small">Belum ada tiket.</div>
-                        @endforelse
-                    </div>
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Domain</th>
+                                <th>Pelapor</th>
+                                <th>Penerima</th>
+                                <th>Status</th>
+                                <th class="text-end">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($this->tickets as $record)
+                                <tr wire:key="ticket-{{ $record->id }}">
+                                    <td class="fw-semibold text-dark text-break">{{ $record->domain ?: '-' }}</td>
+                                    <td>
+                                        <div class="d-flex flex-column gap-1">
+                                            <div class="fw-semibold text-dark">{{ $record->reporter_name ?: '-' }}</div>
+                                            <div class="text-secondary small">{{ $record->reporter_email ?: '-' }}</div>
+                                            <div class="text-secondary small">{{ $record->reporter_phone ?: '-' }}</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="fw-semibold text-dark">{{ $record->received_by_name ?: '-' }}</div>
+                                    </td>
+                                    <td>
+                                        <select wire:change="updateStatus({{ $record->id }}, $event.target.value)" class="form-select form-select-sm w-auto">
+                                            @foreach (HelpdeskStatus::cases() as $ticketStatus)
+                                                <option value="{{ $ticketStatus->value }}" @selected($record->status?->value === $ticketStatus->value)>
+                                                    {{ $ticketStatus->label() }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td class="text-end">
+                                        <a href="{{ route('helpdesk.chat.detail', $record) }}" wire:navigate class="btn btn-outline-primary btn-sm">
+                                            Buka
+                                        </a>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5">
+                                        <div class="alert alert-light border mb-0">Belum ada tiket.</div>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

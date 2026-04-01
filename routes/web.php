@@ -19,6 +19,7 @@ Route::middleware(['auth'])->group(function () {
     Route::livewire('/domain/{id}', 'pages::domain.edit')->name('domain.edit');
     Route::livewire('/user/contact', 'pages::user.contact')->name('user.contact');
     Route::livewire('/helpdesk/chat', 'pages::helpdesk.chat')->name('helpdesk.chat');
+    Route::livewire('/helpdesk/chat/create', 'pages::helpdesk.create')->name('helpdesk.chat.create');
     Route::livewire('/helpdesk/chat/{ticket}', 'pages::helpdesk.detail')->name('helpdesk.chat.detail');
     Route::livewire('/logs/activity', 'pages::logs.activity')->name('logs.activity');
 

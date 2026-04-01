@@ -5,9 +5,8 @@ use App\Models\DomainEmail;
 use App\Mail\DomainExpiredMail;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Url;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 
 new class extends Component {
@@ -16,6 +15,8 @@ new class extends Component {
     public ?string $from = null;
 
     public ?string $to = null;
+
+    public string $search = '';
 
     public string $statusFilter = 'all';
 
@@ -34,6 +35,11 @@ new class extends Component {
         $this->limit = max(1, min(100, $this->limit));
     }
 
+    public function updatedSearch(): void
+    {
+        $this->search = trim(strtolower($this->search));
+    }
+
     #[Computed]
     public function domains(): Collection
     {
@@ -48,6 +54,10 @@ new class extends Component {
         return Domain::query()
             ->with('user:id,email')
             ->whereBetween('tgl_exp', [$from, $to])
+            ->when(
+                filled($this->search),
+                fn ($query) => $query->where('domain', 'like', '%' . $this->search . '%')
+            )
             ->when($this->statusFilter === 'unsent', function ($query) {
                 $query->whereNotIn('id', $this->sentToday);
             })
@@ -125,6 +135,10 @@ new class extends Component {
                         <option value="all">Semua</option>
                         <option value="unsent">Belum Terkirim</option>
                     </select>
+                </div>
+                <div class="col-12 col-md-3">
+                    <label class="form-label">Domain</label>
+                    <input type="search" wire:model.live.debounce.300ms="search" class="form-control" placeholder="Cari domain">
                 </div>
             </div>
 
