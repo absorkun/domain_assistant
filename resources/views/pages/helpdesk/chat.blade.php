@@ -29,7 +29,7 @@ new class extends Component {
 
     public function updateStatus(int $ticketId, string $status): void
     {
-        $ticket = $this->service->listForUser(auth()->id())
+        $ticket = $this->service->listForUser(auth()->id(), $this->day !== '' ? $this->day : null)
             ->firstWhere('id', $ticketId);
 
         if (! $ticket) {
@@ -37,6 +37,7 @@ new class extends Component {
         }
 
         $this->service->updateStatus($ticket, $status);
+        unset($this->tickets);
     }
 
     public function clearDay(): void

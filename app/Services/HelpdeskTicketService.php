@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Enums\HelpdeskStatus;
 use App\Models\HelpdeskTicket;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class HelpdeskTicketService
 {
