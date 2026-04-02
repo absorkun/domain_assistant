@@ -1,39 +1,48 @@
 <?php
 
 use App\Enums\HelpdeskStatus;
-use App\Models\HelpdeskTicket;
+use App\Services\HelpdeskTicketService;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 new class extends Component {
+    protected HelpdeskTicketService $service;
+
+    public string $day = '';
+
+    public function boot(HelpdeskTicketService $service): void
+    {
+        $this->service = $service;
+    }
+
+    public function mount(): void
+    {
+        $this->day = today()->toDateString();
+    }
+
     #[Computed]
     public function tickets(): Collection
     {
-        return HelpdeskTicket::query()
-            ->where('user_id', auth()->id())
-            ->latest('last_message_at')
-            ->latest('id')
-            ->get();
+        return $this->service->listForUser(auth()->id(), $this->day !== '' ? $this->day : null);
     }
 
     public function updateStatus(int $ticketId, string $status): void
     {
-        Validator::make([
-            'status' => $status,
-        ], [
-            'status' => ['required', Rule::enum(HelpdeskStatus::class)],
-        ])->validate();
+        $ticket = $this->service->listForUser(auth()->id())
+            ->firstWhere('id', $ticketId);
 
-        $ticket = HelpdeskTicket::query()
-            ->where('user_id', auth()->id())
-            ->findOrFail($ticketId);
+        if (! $ticket) {
+            abort(404);
+        }
 
-        $ticket->update([
-            'status' => $status,
-        ]);
+        $this->service->updateStatus($ticket, $status);
+    }
+
+    public function clearDay(): void
+    {
+        $this->day = today()->toDateString();
+        unset($this->tickets);
     }
 };
 ?>
@@ -60,6 +69,13 @@ new class extends Component {
                         <div class="text-secondary small text-uppercase fw-semibold mb-1">Tiket</div>
                         <h3 class="h5 mb-0">Daftar Laporan</h3>
                     </div>
+                    <div class="d-flex align-items-end gap-2">
+                        <div>
+                            <label class="form-label small text-secondary mb-1">Hari</label>
+                            <input type="date" wire:model.live="day" class="form-control form-control-sm">
+                        </div>
+                        <button type="button" wire:click="clearDay" class="btn btn-outline-secondary btn-sm">Hari ini</button>
+                    </div>
                 </div>
 
                 <div class="table-responsive">
@@ -69,6 +85,7 @@ new class extends Component {
                                 <th>Domain</th>
                                 <th>Pelapor</th>
                                 <th>Penerima</th>
+                                <th>Tanggal/Waktu</th>
                                 <th>Status</th>
                                 <th class="text-end">Aksi</th>
                             </tr>
@@ -87,6 +104,7 @@ new class extends Component {
                                     <td>
                                         <div class="fw-semibold text-dark">{{ $record->received_by_name ?: '-' }}</div>
                                     </td>
+                                    <td class="text-secondary small text-nowrap">{{ $record->created_at?->format('d/m/Y H:i') ?? '-' }}</td>
                                     <td>
                                         <select wire:change="updateStatus({{ $record->id }}, $event.target.value)" class="form-select form-select-sm w-auto">
                                             @foreach (HelpdeskStatus::cases() as $ticketStatus)
@@ -104,7 +122,7 @@ new class extends Component {
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5">
+                                    <td colspan="6">
                                         <div class="alert alert-light border mb-0">Belum ada tiket.</div>
                                     </td>
                                 </tr>

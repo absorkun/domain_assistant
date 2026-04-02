@@ -1,69 +1,52 @@
 <?php
 
 use App\Enums\HelpdeskStatus;
-use App\Models\HelpdeskTicket;
-use Illuminate\Support\Facades\Validator;
+use App\Services\HelpdeskTicketService;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 new class extends Component {
+    protected HelpdeskTicketService $service;
+
     public string $reporterName = '';
-
     public string $reporterEmail = '';
-
     public ?string $reporterPhone = null;
-
     public string $domain = '';
-
     public string $subject = '';
-
     public string $reportBody = '';
+    public string $status = HelpdeskStatus::InProgress->value;
 
-    public string $status = HelpdeskStatus::Open->value;
+    public function boot(HelpdeskTicketService $service): void
+    {
+        $this->service = $service;
+    }
 
     public function mount(): void
     {
-        $this->status = HelpdeskStatus::Open->value;
+        $this->status = HelpdeskStatus::InProgress->value;
+    }
+
+    public function rules(): array
+    {
+        return [
+            'reporterName' => ['required', 'string', 'max:120'],
+            'reporterEmail' => ['nullable', 'email', 'max:255'],
+            'reporterPhone' => ['required', 'string', 'max:30'],
+            'domain' => ['required', 'string', 'max:120', Rule::exists('domains', 'domain')],
+            'subject' => ['required', 'string', 'max:120'],
+            'reportBody' => ['required', 'string', 'min:3'],
+            'status' => ['required', Rule::enum(HelpdeskStatus::class)],
+        ];
     }
 
     public function createTicket(): void
     {
-        $user = auth()->user();
+        $data = $this->validate($this->rules());
 
-        $data = Validator::make([
-            'reporterName' => $this->reporterName,
-            'reporterEmail' => $this->reporterEmail,
-            'reporterPhone' => $this->reporterPhone,
-            'domain' => $this->domain,
-            'subject' => $this->subject,
-            'reportBody' => $this->reportBody,
-            'status' => $this->status,
-        ], [
-            'reporterName' => ['required', 'string', 'max:120'],
-            'reporterEmail' => ['required', 'email', 'max:255'],
-            'reporterPhone' => ['nullable', 'string', 'max:30'],
-            'domain' => ['nullable', 'string', 'max:120'],
-            'subject' => ['required', 'string', 'max:120'],
-            'reportBody' => ['required', 'string', 'min:3'],
-            'status' => ['required', Rule::enum(HelpdeskStatus::class)],
-        ])->validate();
-
-        HelpdeskTicket::query()->create([
-            'user_id' => auth()->id(),
-            'domain' => $data['domain'] ?: null,
-            'reporter_name' => $data['reporterName'],
-            'reporter_email' => $data['reporterEmail'],
-            'reporter_phone' => $data['reporterPhone'] ?: null,
-            'received_by_user_id' => auth()->id(),
-            'received_by_name' => $user?->full_name ?? $user?->name,
-            'report_body' => $data['reportBody'],
-            'subject' => $data['subject'],
-            'status' => $data['status'],
-            'last_message_at' => now(),
-        ]);
+        $this->service->createTicket($data, auth()->id(), auth()->user()?->full_name ?? auth()->user()?->name ?? '');
 
         $this->reset(['reporterName', 'reporterEmail', 'reporterPhone', 'domain', 'subject', 'reportBody', 'status']);
-        $this->status = HelpdeskStatus::Open->value;
+        $this->status = HelpdeskStatus::InProgress->value;
 
         $this->redirectRoute('helpdesk.chat', navigate: true);
     }
@@ -87,26 +70,29 @@ new class extends Component {
                     <label class="form-label">Diterima oleh</label>
                     <input type="text" value="{{ auth()->user()?->full_name ?? auth()->user()?->name ?? '-' }}" class="form-control" readonly>
                 </div>
-                <div class="row g-3">
-                    <div class="col-12 col-md-4">
-                        <label class="form-label">Nama</label>
-                        <input type="text" wire:model="reporterName" class="form-control">
-                        @error('reporterName')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
-                    </div>
-                    <div class="col-12 col-md-4">
-                        <label class="form-label">Email</label>
-                        <input type="email" wire:model="reporterEmail" class="form-control">
-                        @error('reporterEmail')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
-                    </div>
-                    <div class="col-12 col-md-4">
-                        <label class="form-label">Nomor Telp</label>
-                        <input type="text" wire:model="reporterPhone" class="form-control">
-                        @error('reporterPhone')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+                <div class="border rounded-3 p-3">
+                    <div class="fw-semibold mb-3">Kontak Pelapor</div>
+                    <div class="row g-3">
+                        <div class="col-12 col-md-4">
+                            <label class="form-label">Nama Pelapor</label>
+                            <input type="text" wire:model="reporterName" class="form-control">
+                            @error('reporterName')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <label class="form-label">Email</label>
+                            <input type="email" wire:model="reporterEmail" class="form-control">
+                            @error('reporterEmail')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <label class="form-label">Nomor Telp</label>
+                            <input type="tel" wire:model="reporterPhone" class="form-control" inputmode="numeric" pattern="[0-9]*">
+                            @error('reporterPhone')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+                        </div>
                     </div>
                 </div>
                 <div>
                     <label class="form-label">Domain</label>
-                    <input type="text" wire:model="domain" class="form-control">
+                    <input type="text" wire:model="domain" class="form-control" placeholder="Masukkan domain">
                     @error('domain')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
                 </div>
                 <div>
@@ -122,9 +108,6 @@ new class extends Component {
                 <div>
                     <label class="form-label">Status Laporan</label>
                     <div class="d-flex flex-wrap gap-2">
-                        <input type="radio" class="btn-check" name="helpdesk_status" id="status-open" value="{{ HelpdeskStatus::Open->value }}" wire:model="status">
-                        <label class="btn btn-outline-primary btn-sm" for="status-open">{{ HelpdeskStatus::Open->label() }}</label>
-
                         <input type="radio" class="btn-check" name="helpdesk_status" id="status-progress" value="{{ HelpdeskStatus::InProgress->value }}" wire:model="status">
                         <label class="btn btn-outline-primary btn-sm" for="status-progress">{{ HelpdeskStatus::InProgress->label() }}</label>
 

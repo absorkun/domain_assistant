@@ -2,6 +2,7 @@
 
 use App\Enums\HelpdeskStatus;
 use App\Models\HelpdeskTicket;
+use App\Services\HelpdeskTicketService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
@@ -13,7 +14,9 @@ new class extends Component {
 
     public string $subject = '';
 
-    public string $status = HelpdeskStatus::Open->value;
+    public string $status = HelpdeskStatus::InProgress->value;
+
+    protected HelpdeskTicketService $service;
 
     public function mount(int $ticket): void
     {
@@ -28,6 +31,11 @@ new class extends Component {
         $this->status = $record->status instanceof HelpdeskStatus
             ? $record->status->value
             : (string) $record->status;
+    }
+
+    public function boot(HelpdeskTicketService $service): void
+    {
+        $this->service = $service;
     }
 
     public function ticket(): HelpdeskTicket
@@ -50,8 +58,10 @@ new class extends Component {
 
     public function setStatus(string $status): void
     {
-        $this->status = $status;
-        $this->updateTicket();
+        $ticket = $this->service->updateStatus($this->ticket(), $status);
+        $this->status = $ticket->status instanceof HelpdeskStatus
+            ? $ticket->status->value
+            : (string) $ticket->status;
     }
 
     public function updateTicket(): void

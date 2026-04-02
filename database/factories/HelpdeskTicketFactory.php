@@ -23,7 +23,7 @@ class HelpdeskTicketFactory extends Factory
             'user_id' => User::factory(),
             'domain' => fake()->domainName(),
             'subject' => fake()->sentence(4),
-            'status' => HelpdeskStatus::Open,
+            'status' => HelpdeskStatus::InProgress,
             'last_message_at' => now(),
         ];
     }
