@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('domain_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->string('status')->default('pending');
+            $table->string('status')->nullable()->default(null);
             $table->timestamp('sent_at')->nullable();
             $table->timestamps();
         });
