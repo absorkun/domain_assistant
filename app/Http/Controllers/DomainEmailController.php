@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
 use App\Mail\DomainExpiredMail;
 use App\Models\Domain;
@@ -9,7 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
-class DomainEmailController extends \App\Http\Controllers\Controller
+class DomainEmailController extends Controller
 {
     public function get(Request $request): JsonResponse
     {

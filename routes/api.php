@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\DomainEmailController;
+use App\Http\Controllers\DomainEmailController;
 use App\Http\Controllers\DomainEmailExportController;
 use Illuminate\Support\Facades\Route;
 
